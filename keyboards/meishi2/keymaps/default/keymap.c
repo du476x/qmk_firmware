@@ -15,9 +15,37 @@
  */
 #include QMK_KEYBOARD_H
 
+enum custom_keycodes{
+  M_GIT_CO = SAFE_RANGE,
+  M_COPY_ID,
+  M_ANSIBLE,
+  M_GIT_BRANCHING,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if(record->event.pressed){
+    switch(keycode){
+      case M_GIT_CO:
+        SEND_STRING("git checkout master; git pull; git fetch\n");
+        return false; break;
+      case M_COPY_ID:
+        SEND_STRING("ssh-copy-id -i ~/.ssh/qa_hotwire.key ");
+        return false; break;
+      case M_ANSIBLE:
+        SEND_STRING("ansible-playbook ");
+        return false; break;
+      case M_GIT_BRANCHING:
+        SEND_STRING("git checkout -b ${NEW_BRANCH}");
+        return false; break;
+    }
+  }
+  return true;
+};
+
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT( /* Base */
-    LCTL(KC_Z),  LCTL(KC_X),  LCTL(KC_C), LCTL(KC_V) \
+    LCTL(M_GIT_CO),  LCTL(M_COPY_ID),  LCTL(M_ANSIBLE), LCTL(M_GIT_BRANCHING) \
   )
 };
 
